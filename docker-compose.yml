@@ -1,0 +1,15 @@
+services:
+  mysql:
+    image: mysql:8.0
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:?Set MYSQL_ROOT_PASSWORD in .env}
+      MYSQL_DATABASE: spec_compare
+      MYSQL_USER: ${MYSQL_USER:-specuser}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD:?Set MYSQL_PASSWORD in .env}
+    ports: ["3306:3306"]
+    volumes: ["mysqldata:/var/lib/mysql", "./server/schema.sql:/docker-entrypoint-initdb.d/schema.sql:ro"]
+  api:
+    build: .
+    environment: { PORT: 4000 }
+    ports: ["4000:4000"]
+volumes: { mysqldata: {} }
